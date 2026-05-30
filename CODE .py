@@ -7,13 +7,21 @@ from matplotlib.figure import Figure
 import networkx as nx
 
 # =====================================
-# DATA RUTE
+# DATA RUTE 
 # =====================================
 
 rute_data = [
-    ["RBH", "Ngarai Sianok", 1.2, 6, 120],
-    ["RBH", "Jam Gadang", 3, 10, 60],
-    ["Jam Gadang", "Pasar Atas", 2, 5, 45],
+    
+    ["Rumah Kelahiran Bung Hatta", "Ngarai Sianok", 1.2, 6, 120],
+    ["Ngarai Sianok", "Jenjang Seribu", 4.9, 14, 45],
+    ["Jenjang Seribu", "Balai Kota", 6.0, 18, 60],
+    ["Balai Kota", "Sungai Jemih", 13.8, 32, 45],
+    ["Rumah Kelahiran Bung Hatta", "Jam Gadang", 2.5, 8, 60],
+    ["Jam Gadang", "Taman Margasatwa dan Budaya Kinantan", 1.8, 5, 90],
+    ["Taman Margasatwa dan Budaya Kinantan", "Museum Rumah Adat Baanjuang", 1.2, 4, 60],
+    ["Museum Rumah Adat Baanjuang", "Jembatan Limpapeh", 0.8, 3, 45],
+    ["Jembatan Limpapeh", "Benteng Fort de Kock", 1.5, 5, 75],
+    ["Benteng Fort de Kock", "Lubang Jepang", 1.0, 3, 60]
 ]
 
 # =====================================
@@ -165,8 +173,10 @@ container.pack(
     expand=True
 )
 
+# KANVAS UTAMA
 canvas_main = tk.Canvas(container, bg="white")
 
+# GULIRAN KANAN & BAWAH
 scroll_y = ttk.Scrollbar(
     container,
     orient="vertical",
@@ -186,9 +196,7 @@ scrollable_frame = tk.Frame(
 
 scrollable_frame.bind(
     "<Configure>",
-    lambda e: canvas_main.configure(
-        scrollregion=canvas_main.bbox("all")
-    )
+    lambda e: canvas_main.configure(scrollregion=canvas_main.bbox("all"))
 )
 
 canvas_main.create_window(
@@ -202,6 +210,15 @@ canvas_main.configure(
     xscrollcommand=scroll_x.set
 )
 
+def _on_mousewheel(event):
+    canvas_main.yview_scroll(int(-1*(event.delta/120)), "units")
+def _on_mousewheel_horizontal(event):
+    canvas_main.xview_scroll(int(-1*(event.delta/120)), "units")
+
+canvas_main.bind_all("<MouseWheel>", _on_mousewheel)
+canvas_main.bind_all("<Shift-MouseWheel>", _on_mousewheel_horizontal)
+
+# TATA LETAK
 canvas_main.pack(
     side="left",
     fill="both",
@@ -249,7 +266,7 @@ for col in columns:
 
     tree.column(
         col,
-        width=180,
+        width=220,
         anchor="center"
     )
 
@@ -544,7 +561,7 @@ graph_frame.pack(
 )
 
 # FIGURE
-fig = Figure(figsize=(9, 10), dpi=100)
+fig = Figure(figsize=(10,11), dpi=90)
 
 # 3 subplot
 ax1 = fig.add_subplot(311)
@@ -592,14 +609,14 @@ def update_grafik():
     pos1 = nx.spring_layout(
         G_jarak,
         seed=10,
-        k=1.5
+        k=1.6
     )
 
     nx.draw_networkx_nodes(
         G_jarak,
         pos1,
         ax=ax1,
-        node_size=1500,
+        node_size=1200,
         node_color="skyblue"
     )
 
@@ -659,14 +676,14 @@ def update_grafik():
     pos2 = nx.spring_layout(
         G_waktu,
         seed=20,
-        k=1.5
+        k=1.6
     )
 
     nx.draw_networkx_nodes(
         G_waktu,
         pos2,
         ax=ax2,
-        node_size=2500,
+        node_size=1200,
         node_color="lightgreen"
     )
 
@@ -681,7 +698,7 @@ def update_grafik():
         G_waktu,
         pos2,
         ax=ax2,
-        font_size=9,
+        font_size=7,
         font_weight="bold"
     )
 
@@ -695,7 +712,7 @@ def update_grafik():
         pos2,
         edge_labels=edge_labels_waktu,
         ax=ax2,
-        font_size=8
+        font_size=6
     )
 
     ax2.set_title(
@@ -726,14 +743,14 @@ def update_grafik():
     pos3 = nx.spring_layout(
         G_kunjungan,
         seed=30,
-        k=1.5
+        k=1.6
     )
 
     nx.draw_networkx_nodes(
         G_kunjungan,
         pos3,
         ax=ax3,
-        node_size=2500,
+        node_size=1200,
         node_color="orange"
     )
 
@@ -748,7 +765,7 @@ def update_grafik():
         G_kunjungan,
         pos3,
         ax=ax3,
-        font_size=9,
+        font_size=7,
         font_weight="bold"
     )
 
@@ -762,7 +779,7 @@ def update_grafik():
         pos3,
         edge_labels=edge_labels_kunjungan,
         ax=ax3,
-        font_size=8
+        font_size=6
     )
 
     ax3.set_title(
@@ -773,7 +790,7 @@ def update_grafik():
     ax3.axis("off")
 
     # RAPATKAN GRAPH
-    fig.tight_layout(pad=4)
+    fig.tight_layout(pad=3)
 
     # REFRESH
     canvas_chart.draw()
