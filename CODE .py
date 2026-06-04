@@ -7,9 +7,7 @@ from matplotlib.figure import Figure
 
 import networkx as nx
 
-# =====================================
 # DATA RUTE 
-# =====================================
 
 rute_data = [
     ["Rumah Kelahiran Bung Hatta", "Ngarai Sianok", 1.2, 6, 120],
@@ -52,22 +50,16 @@ def cari_rute_terpendek(start, goal):
                 heapq.heappush(pq, (total_jarak + jarak, tetangga, path + [tetangga]))
     return None, []
 
-# =====================================
 # VARIABEL JALUR
-# =====================================
 jalur_terpilih = []
 
-# =====================================
 # WINDOW
-# =====================================
 root = tk.Tk()
 root.title("Sistem Rute Wisata Bukittinggi")
 root.geometry("1400x800")
 root.configure(bg="#EAF4FF")
 
-# =====================================
 # HEADER
-# =====================================
 header = tk.Frame(root, bg="#1565C0", height=80)
 header.pack(fill="x")
 
@@ -80,15 +72,11 @@ judul = tk.Label(
 )
 judul.pack(pady=18)
 
-# =====================================
 # MAIN FRAME
-# =====================================
 main_frame = tk.Frame(root, bg="#EAF4FF")
 main_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
-# =====================================
 # INPUT FRAME
-# =====================================
 input_frame = tk.Frame(main_frame, bg="white", bd=2, relief="ridge")
 input_frame.pack(side="left", fill="y", padx=(0, 10))
 
@@ -104,7 +92,7 @@ title_input.pack(pady=15)
 def create_label(text):
     tk.Label(input_frame, text=text, font=("Segoe UI", 11, "bold"), bg="white").pack(anchor="w", padx=15, pady=(15, 0))
 
-# Dropdown Input untuk Cari Rute
+
 create_label("Lokasi Awal")
 combo_awal = ttk.Combobox(input_frame, width=28, state="readonly")
 combo_awal.pack(padx=15, pady=8)
@@ -113,9 +101,8 @@ create_label("Lokasi Tujuan")
 combo_tujuan = ttk.Combobox(input_frame, width=28, state="readonly")
 combo_tujuan.pack(padx=15, pady=8)
 
-# =====================================
 # FUNGSI TOMBOL
-# =====================================
+
 def clear_pilihan():
     global jalur_terpilih
     combo_awal.set('')
@@ -147,18 +134,17 @@ def cari_rute():
     else:
         messagebox.showwarning("Peringatan", "Rute tidak ditemukan!")
 
-# Set isi dropdown
+
 lokasi = sorted(list(set([x[0] for x in rute_data] + [x[1] for x in rute_data])))
 combo_awal["values"] = lokasi
 combo_tujuan["values"] = lokasi
 
-# =====================================
-# TOMBOL AKSI (SESUAI REQUEST)
-# =====================================
+
+# TOMBOL AKSI 
 btn_frame = tk.Frame(input_frame, bg="white")
 btn_frame.pack(pady=25)
 
-# Hijau untuk Cari Rute
+
 btn_cari = tk.Button(
     btn_frame,
     text="Cari Rute",
@@ -170,7 +156,7 @@ btn_cari = tk.Button(
 )
 btn_cari.grid(row=0, column=0, padx=8, pady=5)
 
-# Abu-abu untuk Clear
+
 btn_clear = tk.Button(
     btn_frame,
     text="Clear",
@@ -183,9 +169,9 @@ btn_clear = tk.Button(
 btn_clear.grid(row=0, column=1, padx=8, pady=5)
 
 
-# =====================================
+
 # RIGHT FRAME (KANVAS & GRAFIK)
-# =====================================
+
 container = tk.Frame(main_frame, bg="white", bd=2, relief="ridge")
 container.pack(side="right", fill="both", expand=True)
 
@@ -213,7 +199,7 @@ scroll_x.pack(side="bottom", fill="x")
 
 right_frame = scrollable_frame
 
-# FRAME UNTUK CHARTS
+
 graph_frame = tk.Frame(right_frame, bg="white")
 graph_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
@@ -225,7 +211,7 @@ ax3 = fig.add_subplot(313)
 canvas_chart = FigureCanvasTkAgg(fig, master=graph_frame)
 canvas_chart.get_tk_widget().pack(fill="both", expand=True)
 
-# Fungsi gambar graf dinamis agar semua sub-graf merespon rute warna merah
+
 def gambar_sub_graf(ax, index_bobot, judul_graf, warna_node_biasa):
     ax.clear()
     G = nx.Graph()
@@ -233,7 +219,7 @@ def gambar_sub_graf(ax, index_bobot, judul_graf, warna_node_biasa):
     for data in rute_data:
         G.add_edge(data[0], data[1], weight=data[index_bobot])
 
-    # Menggunakan layout konstan agar posisi node sejajar dari atas ke bawah
+    
     pos = nx.spring_layout(G, seed=10, k=1.6)
 
     highlight_edges = []
@@ -265,15 +251,15 @@ def update_grafik():
     fig.tight_layout(pad=3)
     canvas_chart.draw()
 
-# =====================================
 # FOOTER
-# =====================================
+
 footer = tk.Frame(root, bg="#1565C0", height=35)
 footer.pack(fill="x")
 tk.Label(footer, text="Admin Panel - Implementasi Sistem Informasi Rute Wisata", bg="#1565C0", fg="white", font=("Segoe UI", 10)).pack(pady=6)
 
-# =====================================
 # RUN SYSTEM
-# =====================================
+
 update_grafik()
+root.mainloop()
+
 root.mainloop()
